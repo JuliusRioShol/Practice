@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head></head>
+<body>
+    <header>
+
+    </header>
+
+    <h1>Javascript & API's </h1>
+    <p>With basic knowledge of Javascript and API's I can find out that: </p>
+    <h2>Your public ip address is:  <div id = "ipaddress"></div>  </h2>
+   
+    <h2>You are from: </h2>
+    <p id = "city">City</p>
+    <p id = "country">Belize</p>
+    <h2>The weather there is: </h2>
+    <p id = "weather"></p>
+    <h2>Your Internet Service Provider is: </h2>
+    <p id = "isp" >Belize Telemdia Limited </p>
+
+    <script >
+
+console.log("Hello")
+window.addEventListener('load', async function(){
+    try{
+
+        // The first API, that gets the IP address
+        const response = await 
+        fetch("https://api.ipify.org/?format=json");
+        var data = await response.json();
+        document.getElementById("ipaddress").innerHTML =  data.ip ;
+        // "<span style= 'font-size: 26px; font-weight:bold'> " + data.ip + "</span><br> ";
+        console.log(data.ip)
+        const locationResponse = await fetch( "https://ip-geolocation-ipwhois-ip.p.rapidapi.com/json/?ip = " + data.ip, {
+            "method" : "GET",
+            "headers" : {
+                "x-rapidapi-host" : "ip-geolocation-ipwhois-io.p.rapidapi.com",
+                "x-rapidapi-key":"044e648b19mshfece6f865ead2b3p1a1a7ajsn036a4345378f"
+            }  
+        }
+        
+        );
+
+        // Second API call to get the city and country
+        const location = await locationResponse.json();
+        document.getElementById("city").innerHTML = location.city;          // Adds the city to the Page
+        document.getElementById("country").innerHTML = location.country;    // Adds the country to the page
+        console.log(location.country)                                       // Just logs the country on the console.
+
+
+        // Thirds API call to get the weather.
+        const responseWeather = await fetch ("https://community-open-weather-map.p.rapidapi.com/find?q=" + location.city+"&units=imperial",{
+            "method" : "GEt",
+            "headers" : {
+                "x-rapidapi-host" : "community-open-weather-map.p.rapidapi.com",
+                "x-rapidapi-key": "044e648b19mshfece6f865ead2b3p1a1a7ajsn036a4345378f"
+            }
+        })
+        const weather = await responseWeather.json();
+        //ocument.getElementById("weather").innerHTML = weather.list[0].weather[0].description;
+        console.log(weather.list[0].weather[0].description)
+    }
+    catch(err){
+        document.getElementById("ipaddress").innertext = "Timeout, please refresh and try again! ";
+    }
+
+});
+
+    </script>
+</body>
+</html>
